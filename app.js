@@ -8,9 +8,13 @@ const ordersRoutes = require('./api/routes/orders');
 // Middleware used for logging
 app.use(morgan('dev'));
 
+// Body-parser middleware
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
+
+// Routes
 app.use('/products', productRoutes);
 app.use('/orders', ordersRoutes);
-
 
 // Handle errors related to invalid routes
 app.use((req, res, next) => {
@@ -18,7 +22,6 @@ app.use((req, res, next) => {
   error.status = 404;
   next(error);
 });
-
 
 // Handle any error which occurs in the application
 app.use((error, req, res, next) => {
