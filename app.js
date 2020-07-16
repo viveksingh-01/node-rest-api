@@ -1,19 +1,13 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
-const mongoose = require('mongoose');
 
+const connectToDB = require('./config/db');
 const productRoutes = require('./api/routes/products');
 const ordersRoutes = require('./api/routes/orders');
 
 // Connection to DB
-mongoose
-  .connect(
-    `mongodb+srv://node-rest:${process.env.MONGO_ATLAS_PWD}@cluster0.isme1.mongodb.net/<dbname>?retryWrites=true&w=majority`,
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
-  .then(() => console.log('Connected to DB successfully.'))
-  .catch((err) => console.log(err));
+connectToDB();
 
 // Middleware used for logging
 app.use(morgan('dev'));
