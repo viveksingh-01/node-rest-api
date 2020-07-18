@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
   Product.find()
+    .select({ name: 1, price: 1 })
     .then(products => {
       res.status(200).json({
         message: 'Products were fetched successfully.',
@@ -25,6 +26,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   const id = req.params.id;
   Product.findById({ _id: id })
+    .select({ name: 1, price: 1 })
     .then(product => {
       if (product) {
         res.status(200).json({
