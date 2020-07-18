@@ -65,7 +65,12 @@ router.post('/', (req, res) => {
         product
       });
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      res.status(500).json({
+        message: 'Something went wrong',
+        error
+      });
+    });
 });
 
 router.patch('/:id', (req, res) => {
@@ -84,7 +89,12 @@ router.patch('/:id', (req, res) => {
         message: 'Product was updated successfully.'
       });
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      res.status(500).json({
+        message: 'Something went wrong',
+        error
+      });
+    });
 });
 
 router.delete('/:id', (req, res) => {
@@ -95,7 +105,12 @@ router.delete('/:id', (req, res) => {
         message: 'Product was deleted successfully.'
       });
     })
-    .catch(error => console.log(error));
+    .catch(error => {
+      res.status(500).json({
+        message: 'Something went wrong',
+        error
+      });
+    });
 });
 
 module.exports = router;
