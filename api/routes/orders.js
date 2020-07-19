@@ -6,6 +6,7 @@ const Product = require('../models/product');
 router.get('/', (req, res, next) => {
   Order.find()
     .select({ product: 1, quantity: 1 })
+    .populate('product', { name: 1, price: 1 })
     .then(orders => {
       res.status(200).json({
         message: 'Orders fetched successfully.',
@@ -18,12 +19,13 @@ router.get('/', (req, res, next) => {
         error
       });
     });
-});
-
-router.get('/:id', (req, res, next) => {
-  const id = req.params.id;
-  Order.findById({ _id: id })
+  });
+  
+  router.get('/:id', (req, res, next) => {
+    const id = req.params.id;
+    Order.findById({ _id: id })
     .select({ product: 1, quantity: 1 })
+    .populate('product', { name: 1, price: 1 })
     .then(order => {
       if (!order) {
         return res.status(404).json({
