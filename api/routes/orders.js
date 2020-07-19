@@ -5,7 +5,7 @@ const Product = require('../models/product');
 
 router.get('/', (req, res, next) => {
   Order.find()
-    .select({ productId: 1, quantity: 1 })
+    .select({ product: 1, quantity: 1 })
     .then(orders => {
       res.status(200).json({
         message: 'Orders fetched successfully.',
@@ -23,7 +23,7 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   const id = req.params.id;
   Order.findById({ _id: id })
-    .select({ productId: 1, quantity: 1 })
+    .select({ product: 1, quantity: 1 })
     .then(order => {
       if (!order) {
         return res.status(404).json({
@@ -44,15 +44,15 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res) => {
-  const { productId, quantity } = req.body;
-  Product.findById({ _id: productId })
+  const { product, quantity } = req.body;
+  Product.findById({ _id: product })
     .then(product => {
       if (!product) {
         return res.status(404).json({
           message: 'Product not found.'
         });
       }
-      const order = new Order({ _id: new mongoose.Types.ObjectId(), productId, quantity });
+      const order = new Order({ _id: new mongoose.Types.ObjectId(), product, quantity });
       order
         .save()
         .then(order => {
