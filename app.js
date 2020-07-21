@@ -15,7 +15,7 @@ app.use(morgan('dev'));
 // Body-parser middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(express.static('uploads'));
+app.use('/uploads', express.static('uploads'));
 // app.use(express.static(__dirname + '/public'));
 // Handle CORS
 app.use((req, res, next) => {
