@@ -1,12 +1,23 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const multer = require('multer');
 const Product = require('../models/product');
 
 const router = express.Router();
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  }
+});
+const upload = multer({ storage });
+
 router.get('/', (req, res) => {
   Product.find()
-    .select({ name: 1, price: 1 })
+    .select({ name: 1, price: 1, productImage: 1 })
     .then(products => {
       res.status(200).json({
         message: 'Products were fetched successfully.',
@@ -26,7 +37,7 @@ router.get('/', (req, res) => {
 router.get('/:id', (req, res) => {
   const id = req.params.id;
   Product.findById({ _id: id })
-    .select({ name: 1, price: 1 })
+    .select({ name: 1, price: 1, productImage: 1 })
     .then(product => {
       if (product) {
         res.status(200).json({
@@ -49,18 +60,13 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.post('/', (req, res) => {
-  const products = [];
-  for (let item of req.body) {
-    const product = new Product({
-      _id: new mongoose.Types.ObjectId(),
-      name: item.name,
-      price: item.price
-    });
-    products.push(product);
-  }
-
-  Product.insertMany(products)
+router.post('/', upload.single('productImage'), (req, res) => {
+  console.log(req.file);
+  const { name, price } = req.body;
+  const productImage = req.file.path;
+  const product = new Product({ _id: new mongoose.Types.ObjectId(), name, price, productImage });
+  product
+    .save()
     .then(product => {
       res.status(201).json({
         message: 'Product was added successfully.',

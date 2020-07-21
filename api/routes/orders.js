@@ -19,11 +19,11 @@ router.get('/', (req, res, next) => {
         error
       });
     });
-  });
-  
-  router.get('/:id', (req, res, next) => {
-    const id = req.params.id;
-    Order.findById({ _id: id })
+});
+
+router.get('/:id', (req, res, next) => {
+  const id = req.params.id;
+  Order.findById({ _id: id })
     .select({ product: 1, quantity: 1 })
     .populate('product', { name: 1, price: 1 })
     .then(order => {
