@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const connectToDB = require('./config/db');
 const productRoutes = require('./api/routes/products');
 const ordersRoutes = require('./api/routes/orders');
+const userRoutes = require('./api/routes/user');
 
 // Connection to DB
 connectToDB();
@@ -16,7 +17,7 @@ app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
-// app.use(express.static(__dirname + '/public'));
+
 // Handle CORS
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -32,6 +33,7 @@ app.use((req, res, next) => {
 // Routes
 app.use('/products', productRoutes);
 app.use('/orders', ordersRoutes);
+app.use('/user', userRoutes);
 
 // Handle errors related to invalid routes
 app.use((req, res, next) => {
