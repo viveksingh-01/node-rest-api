@@ -31,4 +31,27 @@ router.post('/signup', async (req, res, next) => {
   }
 });
 
+router.post('/login', async (req, res, next) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      const isPasswordCorrect = await bcrypt.compare(password, user.password);
+      if (isPasswordCorrect) {
+        return res.status(200).json({
+          message: 'Login successful!'
+        });
+      }
+    }
+    return res.status(401).json({
+      message: 'Invalid email or password.'
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Something went wrong.',
+      error
+    });
+  }
+});
+
 module.exports = router;
