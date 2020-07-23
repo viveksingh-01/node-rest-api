@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const Product = require('../models/product');
+const tokenValidation = require('../middlewares/token-validation');
 
 const router = express.Router();
 
@@ -67,8 +68,7 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.post('/', upload.single('productImage'), (req, res) => {
-  console.log(req.file);
+router.post('/', tokenValidation, upload.single('productImage'), (req, res) => {
   const { name, price } = req.body;
   const productImage = req.file.path;
   const product = new Product({ _id: new mongoose.Types.ObjectId(), name, price, productImage });
@@ -88,7 +88,7 @@ router.post('/', upload.single('productImage'), (req, res) => {
     });
 });
 
-router.patch('/:id', (req, res) => {
+router.patch('/:id', tokenValidation, (req, res) => {
   const id = req.params.id;
   Product.update(
     { _id: id },
@@ -112,7 +112,7 @@ router.patch('/:id', (req, res) => {
     });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', tokenValidation, (req, res) => {
   const id = req.params.id;
   Product.deleteOne({ _id: id })
     .then(() => {

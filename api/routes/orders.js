@@ -2,8 +2,9 @@ const router = require('express').Router();
 const mongoose = require('mongoose');
 const Order = require('../models/order');
 const Product = require('../models/product');
+const tokenValidation = require('../middlewares/token-validation');
 
-router.get('/', (req, res, next) => {
+router.get('/', tokenValidation, (req, res, next) => {
   Order.find()
     .select({ product: 1, quantity: 1 })
     .populate('product', { name: 1, price: 1 })
@@ -21,7 +22,7 @@ router.get('/', (req, res, next) => {
     });
 });
 
-router.get('/:id', (req, res, next) => {
+router.get('/:id', tokenValidation, (req, res, next) => {
   const id = req.params.id;
   Order.findById({ _id: id })
     .select({ product: 1, quantity: 1 })
@@ -45,7 +46,7 @@ router.get('/:id', (req, res, next) => {
     });
 });
 
-router.post('/', (req, res) => {
+router.post('/', tokenValidation, (req, res) => {
   const { product, quantity } = req.body;
   Product.findById({ _id: product })
     .then(product => {
@@ -78,7 +79,7 @@ router.post('/', (req, res) => {
     });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', tokenValidation, (req, res) => {
   Order.deleteOne({ _id: req.params.id })
     .then(() => {
       res.status(200).json({
