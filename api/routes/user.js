@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const router = express.Router();
 const User = require('../models/user');
 
@@ -38,8 +39,10 @@ router.post('/login', async (req, res, next) => {
     if (user) {
       const isPasswordCorrect = await bcrypt.compare(password, user.password);
       if (isPasswordCorrect) {
+        const token = jwt.sign({ userId: user._id }, process.env.SECRET);
         return res.status(200).json({
-          message: 'Login successful!'
+          message: 'Login successful!',
+          token
         });
       }
     }
